@@ -6,7 +6,15 @@ export PATH=$PATH:/kaniko/
 
 REGISTRY=${PLUGIN_REGISTRY:-index.docker.io}
 
-if [ "${PLUGIN_USERNAME:-}" ] || [ "${PLUGIN_PASSWORD:-}" ]; then
+if [[ "${PLUGIN_ECR:-}" == "true" ]]; then
+    cat > /kaniko/.docker/config.json <<DOCKERJSON
+{
+  "credHelpers": {
+    "${REGISTRY}": "ecr-login"
+  }
+}
+DOCKERJSON
+elif [ "${PLUGIN_USERNAME:-}" ] || [ "${PLUGIN_PASSWORD:-}" ]; then
     DOCKER_AUTH=`echo -n "${PLUGIN_USERNAME}:${PLUGIN_PASSWORD}" | base64 | tr -d "\n"`
 
     cat > /kaniko/.docker/config.json <<DOCKERJSON
