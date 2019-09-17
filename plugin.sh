@@ -50,6 +50,14 @@ if [[ "${PLUGIN_CACHE:-}" == "true" ]]; then
     CACHE="--cache=true"
 fi
 
+if [[ "${PLUGIN_SINGLE_SNAPSHOT:-}" == "true" ]]; then
+    SINGLE_SNAPSHOT="--single-snapshot=true"
+fi
+
+if [[ "${PLUGIN_SNAPSHOT_MODE:-}" == "time" ]]; then
+    SNAPSHOT_MODE="--snapshotMode=time"
+fi
+
 if [ -n "${PLUGIN_BUILD_ARGS:-}" ]; then
     BUILD_ARGS=$(echo "${PLUGIN_BUILD_ARGS}" | tr ',' '\n' | while read build_arg; do echo "--build-arg=${build_arg}"; done)
 fi
@@ -75,6 +83,8 @@ fi
     --dockerfile=${DOCKERFILE} \
     ${EXTRA_OPTS} \
     ${DESTINATIONS} \
+    ${SINGLE_SNAPSHOT:-} \
+    ${SNAPSHOT_MODE:-} \
     ${CACHE:-} \
     ${TARGET:-} \
     ${BUILD_ARGS:-} \
